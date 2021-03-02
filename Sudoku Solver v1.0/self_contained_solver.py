@@ -40,14 +40,6 @@ def check_block(x,y):
             if v != 0:
                 result.append(v)
     return result
-            
-def check_win():
-    for row in sudoku:
-        for v in row:
-            if v == 0:
-                return False
-    return True
-
 
 def print_sudoku(s):
     result = ""
@@ -98,7 +90,7 @@ def solve(*args):
     return False
 
 solved_sudoku = solve()
-cmd_pauser = input()
+#cmd_pause = input()
 
 # Coded by Lucas Emmes on 26/02/21 - 27/02/21 when he could have
 # been doing homework instead :^)
