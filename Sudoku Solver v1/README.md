@@ -1,5 +1,5 @@
 This sudoku solver will solve any solvable sudoku
-through "smart" bruteforce by using recursion
+through "smart" bruteforce by using recursion  
 Small notes:
 
 -   This solver does not check if the base sudoku has illegal
