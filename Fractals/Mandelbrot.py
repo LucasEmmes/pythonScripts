@@ -34,3 +34,6 @@ for y in range(height):
 
 print("Finished")
 cv2.waitKey(0)
+
+# Coded by Lucas Emmes on 02/03/21
+# I did this instead of studying for a test :^)
