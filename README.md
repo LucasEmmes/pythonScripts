@@ -3,6 +3,6 @@
   
   
 ### Languages ###  
-Python: 100%  
+Python: 100.0%  
   
 Hell ye
