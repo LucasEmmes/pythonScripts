@@ -1,6 +1,9 @@
+# Sudoku solver #
+
 This sudoku solver will solve any solvable sudoku
-through "smart" bruteforce by using recursion  
-Small notes:
+through "smart" bruteforce by using recursion
+
+*Small notes*:
 
 -   This solver does not check if the base sudoku has illegal
       placement of values. If there are, it will probably just
