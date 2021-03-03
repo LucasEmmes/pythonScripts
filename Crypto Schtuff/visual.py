@@ -79,12 +79,6 @@ def main():
             pt = input("Plaintext: ")
             visual_encode(pt)
 
-
-
-
-
-
-
 main()
     
-# Coded by Lucas Emmes during quarantine sometime
+# Coded by Lucas Emmes some time during quarantine
