@@ -16,7 +16,9 @@ yet in case something were to go wrong.
 
 *Notes*
   - visual.py  
-	This one requires you have Pillow installed.
+    This one requires you have Pillow installed.
+    It takes both PNG and JPG as input  
+    (possibly more, haven't checked)  
     It also doesn't have docstrings yet  
     but probably aren't needed either.
     
