@@ -1,3 +1,5 @@
+import re
+
 fd = [] # Functional Dependencies
 tables = []
 
@@ -30,31 +32,7 @@ class table():
         tables.append(self)
     def __repr__(self):
         return f"{self.name}"
-
-def derivate_attributes(attributes):
-    pot = fd.copy()
-    atts = []
-    for i in range(len(attributes)):
-        atts.append(attributes[i])
-    
-    while len(pot) > 0:
-        t = False
-        for dep in pot:
-            if dep.derives_from(atts):
-                t = True
-                atts += dep.choses
-                pot.remove(dep)
-        if not t:
-            break
-        
-    if len(tables) > 0:
-        for a in tables[0].attributes:
-            if a not in atts:
-                return list(dict.fromkeys(atts))
-        return tables[0].name
-    
-    return list(dict.fromkeys(atts))
-                
+            
 def remove_spaces(string):
     result = ""
     for c in string:
@@ -82,7 +60,66 @@ def parse_dependencies(string):
             y.append(dependencies[i][1][j])
         dependency(x, y)
 
-F = "F = { B -> A; CD -> E; E -> B; A -> C }"
+def derivate_attributes(attributes):
+    pot = fd.copy()
+    atts = []
+    for i in range(len(attributes)):
+        atts.append(attributes[i])
+    
+    while len(pot) > 0:
+        t = False
+        for dep in pot:
+            if dep.derives_from(atts):
+                t = True
+                atts += dep.choses
+                pot.remove(dep)
+        if not t:
+            break
+        
+    if len(tables) > 0:
+        for a in tables[0].attributes:
+            if a not in atts:
+                return list(dict.fromkeys(atts))
+        return tables[0].name
+    
+    return list(dict.fromkeys(atts))
+
+def get_superkeys():
+    unique = True
+    atts = tables[0].attributes*2
+    superkeys = []
+    for i in range(len(atts)//2):
+        for j in range(len(atts)//2):
+            s = "".join(atts[i:i+j+1])
+            result = derivate_attributes(s)
+            if result == tables[0].name:
+                for superkey in superkeys:
+                    if len(superkey) == len(s):
+                        unique = False
+                        for c in range(len(s)):
+                            if not s[c] in superkey:
+                                unique = True
+                        if not unique:
+                            break
+                if unique:
+                    superkeys.append(s)
+    return superkeys
+
+def get_candidate_keys():
+    superkeys = get_superkeys()
+    keys = superkeys.copy()
+    for superkey in superkeys:
+        is_key = True
+        for i in range(len(superkeys)):
+            if superkey != superkeys[i]:
+                if re.search(f"[^{superkey}]", superkeys[i]) == None:
+                    is_key = False
+                    break
+        if not is_key:
+            keys.remove(superkey)
+    return keys
+
+F = "F = {AB -> D; D->E; B->C; C->A; A->B}"
 T = "R(A,B,C,D,E)"
 
 parse_dependencies(F)
