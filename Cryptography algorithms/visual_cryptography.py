@@ -2,6 +2,11 @@ from PIL import Image
 import random
 
 def visual_encode(filename):
+    """
+    Encrypts the given image using visual encryption
+    PARAMS:
+        filename (string): The filepath to the image to be encrypted
+    """
 
     original = Image.open(filename)
     plaintext = original.convert("1")
@@ -36,6 +41,12 @@ def visual_encode(filename):
             
 
 def visual_decode(share1, share2):
+    """
+    Decodes two given shares of a visual encryption, assuming that they are compatible (i.e. the same dimensions)
+    PARAMS:
+        share1 (string): Filepath to the first share
+        share2 (string): Filepath to the second share
+    """
 
     s1 = Image.open(share1)
     s2 = Image.open(share2)
@@ -67,6 +78,9 @@ def visual_decode(share1, share2):
 
 
 def main():
+    """
+    Just the 'command line' so it can easily be run in CMD
+    """
     while True:
         command = int(input("Encode [0] / Decode [1]: "))
         if command:

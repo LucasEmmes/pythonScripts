@@ -1,4 +1,0 @@
-can i even take credit for making these?
-they are pretty much just textbook randitions of
-algorithms that someone else already came up with,
-just turned into python 

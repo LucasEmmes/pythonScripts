@@ -1,9 +1,14 @@
 def ceasar_cipher(text, alphabet, k, code):
-    """text (string): The text you would like to encode or decode
-    alphabet (array[char]/string): List of all the available characters in order
-        May be one long string, or array of single chars
-    k (int): The encryption key
-    code (int): Whether you want to encode(0) or decode(1)"""
+    """
+    Will encode or decode given text based on the provided alphabet by transposition
+    PARAMS:
+        text (string): The text you would like to encode or decode
+        alphabet (array[char] / string): List of all the available characters in order. May be one long string, or array of single characters
+        k (int): The encryption key
+        code (int): Whether you want to encode(0) or decode(1)
+    RETURNS:
+        string: Encoded ciphertext or decoded plaintext
+    """
 
     if code == 0:
 
@@ -39,13 +44,16 @@ def ceasar_cipher(text, alphabet, k, code):
 
 
 def vigenere(text, alphabet, k, code):
-    """text (string): The text you would like to encode or decode
-    alphabet (array[char]/string): List of all the available characters in order
-        May be one long string, or array of single chars
-    k (array[int]): Array of integers to be used as keys.
-        Period is determined by the length of the array
-        No padding is apllied here
-    code (int): Whether you want to encode(0) or decode(1)"""
+    """
+    Will encode or decode given text based on the provided alphabet by transposition
+    PARAMS:
+        text (string): The text you would like to encode or decode
+        alphabet (array[char] / string): List of all the available characters in order. May be one long string, or array of single characters
+        k (array[int]): Array of integers to be used as keys. Period is determined by the length of the array. No padding is applied here
+        code (int): Whether you want to encode(0) or decode(1)
+    RETURNS:
+        string: Encoded ciphertext or decoded plaintext
+    """
 
     if code == 0:
 

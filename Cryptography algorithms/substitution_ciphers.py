@@ -1,12 +1,15 @@
 import random
 
 def simple_substitute(text, alphabet, code):
-    """plaintext (string): The message you want to encode
-    alphabet (dictionairy[char] = char): Key is plaintext char,
-        value is the substitute.
-        Enter the same alphabet for both encode and decode
-    code int: Whether to encode (0) or decode (1)
-    returns string"""
+    """
+    Used to encode or decode the given text based on the provided alphabet.
+    PARAMS:
+        plaintext (string): The message you want to encode
+        alphabet (dictionairy[char] = char): Key is plaintext char, value is the substitute. Enter the same alphabet for both encode and decode
+        code (int): Whether to encode (0) or decode (1)
+    RETURNS:
+        string: The decoded plaintext or encoded ciphertext
+    """
 
     if code == 0:
         
@@ -35,12 +38,15 @@ def simple_substitute(text, alphabet, code):
 
 
 def poly_substitute(text, alphabet, code):
-    """plaintext (string): The message you want to encode
-    alphabet (dictionairy[char] = array[chars]): Key is plaintext char,
-        value is array of one or more substitute(s).
-        Enter the same alphabet for both encode and decode
-    code int: Whether to encode (0) or decode (1)
-    returns string"""
+    """
+    Used to encode or decode the given text based on the provided poly-alphabet.
+    PARAMS:
+        plaintext (string): The message you want to encode.
+        alphabet (dictionairy[char] = array[chars]): Key is plaintext char, value is array of one or more substitute(s). Enter the same alphabet for both encode and decode
+        code int: Whether to encode (0) or decode (1)
+    RETURNS:
+        string: The decoded plaintext or encoded ciphertext
+    """
     
     if code == 0:   # Encode
 

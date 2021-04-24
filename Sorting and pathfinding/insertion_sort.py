@@ -1,4 +1,7 @@
 def insertion_sort(arr):
+    """
+    It's insertion sort alright!
+    """
     for j in range(1, len(arr)):
         current_val = arr[j]
         i = j-1

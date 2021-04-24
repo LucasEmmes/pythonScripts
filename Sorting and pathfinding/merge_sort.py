@@ -12,6 +12,9 @@ def merge(a, b):
     return result
 
 def merge_sort(arr):
+    """
+    Merge sort just like you remember it from your college classes
+    """
     if len(arr) == 1:
         return arr
 
