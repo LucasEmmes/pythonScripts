@@ -1,5 +1,6 @@
 # pythonScripts #  
-## Small python scripts I made ##  
+## A small showcase / collection of python scripts I've made ##  
+
   
   
 ### Languages ###  
