@@ -1,17 +1,12 @@
-import math
-
-def is_prime(x):
-    if x % 2 == 0:
-        return False
-
-    i = 3
-    while i <= math.sqrt(x):
-        if x % i == 0:
-            return False
-        i += 2
-    return True
-
 def euclid(a, b):
+    """
+    Applies the Euclidean algorithm to find gcd(a, b)
+    PARAMS:
+        a (int)
+        b (int)
+    RETURNS:
+        int: The greatest common demoninator
+    """
     if a < b:
         a, b = b, a
 
@@ -23,6 +18,14 @@ def euclid(a, b):
     return euclid(b, q)
 
 def euclid_extended(a, b):
+    """
+    Applies the Euclidean algorithm and returns an array that may be used to calculate the GCD in the form a*x + b*y = 1
+    PARAMS:
+        a (int)
+        b (int)
+    RETURNS:
+        array: A formatted array
+    """
     if a < b:
         a, b = b, a
     
@@ -41,6 +44,9 @@ def euclid_extended(a, b):
         return new_r
 
 def deep_replace(arr, x, y):
+    """
+    Help function for extended_euclid
+    """
     for i in range(len(arr)):
 
         element = arr[i]
@@ -54,6 +60,9 @@ def deep_replace(arr, x, y):
     return arr
 
 def deep_calculate(arr, a, b):
+    """
+    Help function for invert_mod
+    """
     # INNER WILL ALWAYS BE B * Y
     if type(arr[0]) == int and type(arr[1]) == int:
         return 0, arr[1]
@@ -82,11 +91,22 @@ def deep_calculate(arr, a, b):
         return x, y
 
 def invert_mod(x, n):
+    """
+    Calculates the inverse modulus (if it exists)
+    PARAMS:
+        x (int): The integer to invert
+        n (int): The modulus
+    RETURNS:
+        int: The inverse modulus x^-1 mod(n)
+    """
     gcd = euclid(x, n)
 
     if gcd != 1:
         print(f"Cannot invert as the gcd is {gcd} and not 1")
         return None
+
+    if x > n:
+        x = x%n
     
     arr = euclid_extended(x, n)
     ax, by = deep_calculate(arr, n, x)

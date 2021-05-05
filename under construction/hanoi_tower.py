@@ -15,15 +15,20 @@ def check_formatting(arr):
         
     return True
 
-def formatted_tower(arr):
+def formatted_tower_string(arr):
     pass
 
 def generate_hanoi_tower(size):
-    pass
+    base = [[], [], []]
+    for i in range(size):
+        base[0].append(i)
+        base[1].append(0)
+        base[2].append(0)
+    return base
 
 def move_piece(arr, piece, place, print_steps=False):
     # For visual purposes
-    if print_steps: print(arr)
+    if print_steps: print(formatted_tower_string(arr))
     # Remove piece from the tower it's currently in
     for tower in arr:
         try:
@@ -77,6 +82,8 @@ def build_tower(arr, size, place, print_steps=False):
     return arr
 
 
-
-hanoi = [[1,2,3,4], [0,0,0,0], [0,0,0,0]]
-print(build_tower(hanoi, 4, 2, print_steps=True))
+x = 4
+hanoi = generate_hanoi_tower(x)
+# print(build_tower(hanoi, 4, 2, print_steps=True))
+solved = build_tower(hanoi, x, 2)
+print(solved)
