@@ -28,7 +28,7 @@ class brainfuck:
     
     def get_input(self):
         char = input()
-        self.cells[self.pointer] = ord(char[0]) if len(char) > 0 else 0
+        self.cells[self.pointer] = (ord(char[0]) if len(char) > 0 else 0) % 256
     
     def run_loop(self):
         return self.cells[self.pointer]
