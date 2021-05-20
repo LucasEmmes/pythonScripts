@@ -19,5 +19,20 @@ class player:
     def end_turn(self):
         pass
 
-    def offer_trade(self):
+    def offer_trade(self, player_in, player_out):
+        pass
+
+    def respond_offer(self, accept):
+        pass
+
+    def purchase_house(self, property):
+        pass
+
+    def sell_house(self, property):
+        pass
+
+    def purchase_property(self):
+        pass
+
+    def mortgage_property(self, property):
         pass
