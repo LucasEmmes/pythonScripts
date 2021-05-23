@@ -1,0 +1,40 @@
+client launch
+1) enter ip
+2) send ping?
+3) enter username (send)
+4) create room / join room
+
+create:
+1) server makes new room
+2) server connects player to room
+3) server gives room code to player
+4) server wait for player to join with code
+
+join:
+1) client enters room code
+2) server connects player to room
+3) server notifies player1 and starts game
+
+1) server announces who will start
+2) clients will take turns making moves
+
+valid move:
+1) server will tell player that move was successfull
+2) server will tell opponent what move has been made
+
+invalid move:
+
+ERROR CODES
+x-section-reason
+
+REGISTERING
+username|user_id
+
+JOINING
+JOINxxxx
+
+CREATING
+CREATE
+
+PLAYING
+MOVE|x,y
