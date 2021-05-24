@@ -1,9 +1,10 @@
 import socket
+import threading
 
 PORT = 5050
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
-SERVER = "10.20.0.3"
+SERVER = "10.18.0.3"
 ADDR = (SERVER, PORT)
 
 
@@ -18,9 +19,14 @@ def send(msg):
 def receive():
     while connected:
         data = client.recv(2048).decode(FORMAT)
+        print(data)
 
 
 def main():
-    pass
+    rec_thread = threading.Thread(target=receive)
+    rec_thread.start()
+    while True:
+        send(input())
 
 main()
+# s = input()

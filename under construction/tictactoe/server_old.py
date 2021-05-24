@@ -12,7 +12,10 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
+# room objects
 rooms = []
+# key: user_id; value: connection
+connections = {}
 
 
 def get_room(code):
@@ -21,10 +24,19 @@ def get_room(code):
             return room
     return False
 
+def get_connection(user_id):
+    for id in connections.keys():
+        if id == user_id:
+            return connections[id]
+    return False
+
+# TODO - handle passing info to enemy
+
 def handle_client(conn, addr):
     username = False
     user_id = False
     in_room = False
+    enemy_conn = False
 
     print(f"{addr} connected")
     connected = True
@@ -36,6 +48,7 @@ def handle_client(conn, addr):
             # GET USERNAME IF NOT REGISTERED
             if not username:
                 username, user_id = msg.split("|")
+                connections[user_id] = conn
                 conn.send("1".encode(FORMAT))
 
             # IF NOT CONNECTED TO A ROOM, EITHER JOIN OR CREATE
@@ -48,10 +61,11 @@ def handle_client(conn, addr):
                     # check if room exists
                     if check_room:
                         # check if can join
-                        if check_room.connect_player(user_id):
+                        if check_room.connect_player(user_id, conn):
                             # join and inform user
                             in_room = check_room
                             conn.send("1-JOIN".encode(FORMAT))
+                            enemy_conn = in_room.game.p1_conn
                             print(f"{username} JUST JOINED ROOM {room_code}")
                         else:
                             conn.send("0-JOIN-FULL".encode(FORMAT))
@@ -67,7 +81,7 @@ def handle_client(conn, addr):
                     rooms.append(in_room)
                     room_code = in_room.room_code
                     # inform user about code
-                    if in_room.connect_player(user_id):
+                    if in_room.connect_player(user_id, conn):
                         conn.send(f"1-CREATE-{room_code}".encode(FORMAT))
                         print(f"USER {username} HAS MADE A NEW ROOM WITH CODE {room_code}")
                     else:
@@ -80,10 +94,27 @@ def handle_client(conn, addr):
 
             # IF CONNECTED TO A ROOM: PLAY GAME
             else:
-                pass
+                if msg[:4] == "MOVE":
+                    coords = msg.split("|")[1]
 
+                    # attempt to make move
+                    if in_room.game.turn(user_id, coords):
+                        # if successfull send confirmation
+                        conn.send("1-MOVE".encode(FORMAT))
+                        # check for win
+                        if in_room.game.done:
+                            if in_room.game.winner:
+                                conn.send(f"2-WIN-{user_id}".encode(FORMAT))
+                                print(f"{user_id} WON THE GAME IN ROOM {room_code}!")
+                            else:
+                                conn.send("2-TIE".encode(FORMAT))
+                                print(f"ROOM {room_code} ENDED IN A TIE")
+                    else:
+                        conn.send("0-MOVE".encode(FORMAT))
+                        print(f"{username} TRIED TO MAKE A MOVE AND FAILED")
 
     except socket.error:
+        print(f"{user_id} FORCEFULLY DISCONNECTED")
         pass
 
     conn.close()

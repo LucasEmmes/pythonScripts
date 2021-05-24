@@ -6,6 +6,7 @@ class tictactoe:
         self.p1 = player1
         self.p2 = player2
 
+        self.winner = False
         self.done = False
         self.board = [[0,0,0], [0,0,0], [0,0,0]]
         if random.randint(0,1):
@@ -63,8 +64,10 @@ class tictactoe:
         if win:
             tie = False
             if win == self.p1:
+                self.winner = self.p1
                 print("PLAYER 1 WINS!")
             else:
+                self.winner = self.p2
                 print("PLAYER 2 WINS!")
             self.done = True
         else:
@@ -76,16 +79,3 @@ class tictactoe:
         if tie:
             print("TIED")
             self.done = True
-
-# p1, p2 = 1, 2
-# test = tictactoe(p1, p2)
-# if test.player_turn == p2:
-#     p1, p2 = p2, p1
-
-# test.turn(p1, "0,0")
-# test.turn(p2, "1,1")
-# test.turn(p1, "1,0")
-# test.turn(p2, "2,0")
-# test.turn(p1, "0,1")
-# test.turn(p2, "0,2")
-# test.turn(p1, "1,2")
