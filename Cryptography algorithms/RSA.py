@@ -24,7 +24,7 @@ def RSA_generate_keys(*args):
     # e = 1 < e < phi(N), coprime to N, phi(N)
     e_candidates = []
     for i in range(2, phi_N):
-        if (math.gcd(i, N) == 1) and (math.gcd(i, phi_N) == 1):
+        if (math.gcd(i, phi_N) == 1):
             e_candidates.append(i)
     # Pick a random e (optional)
     e = e_candidates[random.randint(0, len(e_candidates)-1)]
