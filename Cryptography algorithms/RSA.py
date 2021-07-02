@@ -4,6 +4,7 @@ import random
 def RSA_generate_keys(*args):
     """
     Generates a pair of public and private RSA keys
+    
     PARAMS:
         *args: ((int), (int)) tuple with two prime numbers that you wish to be used. Can be ommited, in which case it will generate a random set for you (not implemented yet)
     RETURNS:
@@ -11,10 +12,12 @@ def RSA_generate_keys(*args):
         Otherwise (int, int, int, int, int): (e, d, N, p, q) tuple used for encrypting / decrypting your messages
     """
 
-
     # p, q = prime1, prime2
     if len(args) == 2:
         p, q = args
+    else:
+        pass
+        # TODO: get numbers from prime genmerator
     
     # N = pq
     N = p*q
@@ -24,12 +27,12 @@ def RSA_generate_keys(*args):
     # e = 1 < e < phi(N), coprime to N, phi(N)
     e_candidates = []
     for i in range(2, phi_N):
-        if (math.gcd(i, N) == 1) and (math.gcd(i, phi_N) == 1):
+        if (math.gcd(i, phi_N) == 1):
             e_candidates.append(i)
     # Pick a random e (optional)
     e = e_candidates[random.randint(0, len(e_candidates)-1)]
 
-    # d = de % phi(N) = 1
+    # d = d*e % phi(N) = 1
     d = 0
     for i in range(phi_N):
         if i*e % phi_N == 1:
@@ -39,14 +42,14 @@ def RSA_generate_keys(*args):
     if len(args) == 2:
         return e, d, N
     
-    return e, d, N
+    return p, q, e, d, N
 
 def RSA_encrypt(e, N, m):
     """
-    Encrypts your message using the provided keys
+    Encrypts your message using the provided keys p, q
     """
     if m > N:
-        print(f"m is too large!\nPlease make sure it is less than {N}")
+        print(f"Message is too large!\nPlease make sure it is less than {N}")
         raise ValueError
 
     return m**e % N
@@ -54,7 +57,7 @@ def RSA_encrypt(e, N, m):
 # m = c**d % n
 def RSA_decrypt(d, N, c):
     """
-    Decrypts your message using the provided keys
+    Decrypts your message using the provided key d
     """
     return c**d % N
 
