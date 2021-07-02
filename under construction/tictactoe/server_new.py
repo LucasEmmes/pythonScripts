@@ -64,10 +64,18 @@ def player_join_room(code, user_id, conn):
                 return rooms[room_code]
     return False
 
+def format_board(board):
+    s = ""
+    for i in range(3):
+        for j in range(3):
+            s+=board[i][j]
+            s+=","
+    return s[:-1]
+
 def handle_move(user_id, conn, in_room, move):
     if in_room.game.turn(user_id, move):
         conn.send("1-MOVE".encode(FORMAT))
-        in_room.announce(f"2-MOVE-{in_room.game.board}")
+        in_room.announce(f"2-MOVE-{format_board(in_room.game.board)}")
         return True
     else:
         conn.send("0-MOVE".encode(FORMAT))

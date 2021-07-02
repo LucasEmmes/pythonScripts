@@ -1,6 +1,7 @@
 class player:
     def __init__(self, name):
         self.name = name
+        
         self.money = 30000
         self.position = 0
         self.in_prison = False
@@ -19,7 +20,7 @@ class player:
     def end_turn(self):
         pass
 
-    def offer_trade(self, player_in, player_out):
+    def offer_trade(self, player, player_gain, player_loss):
         pass
 
     def respond_offer(self, accept):
@@ -29,6 +30,9 @@ class player:
         pass
 
     def sell_house(self, property):
+        pass
+
+    def sell_all_houses(self, street):
         pass
 
     def purchase_property(self):

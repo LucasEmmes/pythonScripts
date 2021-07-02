@@ -8,7 +8,7 @@ PORT = 5050
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
 # SERVER = input("Please enter server IP: ")
-SERVER = "10.17.0.4"
+SERVER = "10.18.0.2"
 ADDR = (SERVER, PORT)
 
 
@@ -100,6 +100,7 @@ def make_move():
         time.sleep(1)
         if not valid_move:
             print("Not a valid move")
+            return 0
         else:
             return 1
 
@@ -139,7 +140,11 @@ def receive():
             elif data[1] == "MOVE":
                 board_string = data[2]
                 #TODO - turn string into 2d array
-                pass
+                print(board_string)
+                if my_turn:
+                    my_turn = False
+                else:
+                    my_turn = True
             else:
                 pass
         # username handle
@@ -168,9 +173,11 @@ def receive():
                 print("Failed to jion game wtftfwtf")
         elif data[1] == "MOVE":
             if data[0] == "1":
-                pass
+                valid_move = True
+                time.sleep(1)
+                valid_move = False
             else:
-                pass
+                print("Not a valid move")
             # TODO - check validity
 
         # make move handle
