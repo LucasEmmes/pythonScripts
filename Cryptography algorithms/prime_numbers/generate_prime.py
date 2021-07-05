@@ -1,6 +1,3 @@
-from functools import cache
-
-@cache
 def lucas_lehmer_seq(n, *args):
     if n == 0:
         return 4
