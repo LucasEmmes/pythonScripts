@@ -1,3 +1,4 @@
+from os import read
 from PIL import Image
 import math
 
@@ -72,8 +73,8 @@ def check_metadata(filename):
     x, y = image.size
     pixels = image.load()
 
-    l1 = get_from_pixel(pixels[x-3, y-1], 4)
-    l2 = get_from_pixel(pixels[x-2, y-1], 4)
+    l1 = get_from_pixel(pixels[x-3, y-1], 6)
+    l2 = get_from_pixel(pixels[x-2, y-1], 6)
     sdf = get_from_pixel(pixels[x-1, y-1], 3)
     
     image.close()
@@ -88,6 +89,15 @@ def check_metadata(filename):
     if decimal_to_binary(sanity, 3) == sdf[0:3]:
         return binary_to_decimal(l1+l2), binary_to_decimal(sdf[3:6]), binary_to_decimal(sdf[6:])
     return False
+
+def read_pixel(filename, n):
+    image = Image.open(filename)
+    x, y = image.size
+    pixels = image.load()
+    image.close()
+
+    # print(pixels[n//y, n%x])
+    return pixels[n//y, n%x]
 
 # STRING ENCODE AND DECODE
 def text_to_binary(text):
@@ -124,6 +134,7 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
 
     print("RAW BITSTRING BEFORE PADDING")
     print(bitstring)
+    bs_length = len(bitstring)
 
     # Pad bitstring
     desired_length = pixels_required * 3 * depth
@@ -132,18 +143,19 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
     print("RAW BITSTRING AFTER PADDING")
     print(bitstring)
 
-    # Cut bitstring
+    # Cut bitstring into correctly sized pieces
     characters = []
-    for i in range(0, len(bitstring), 9):
-        characters.append(bitstring[i:i+9])
+    for i in range(0, len(bitstring), 3*depth):
+        characters.append(bitstring[i:i+3*depth])
 
     # Insert each piece into pixel
     for i in range(len(characters)):
-        pixel = pixels[i//y, i%x]
-        pixel = add_to_pixel(characters[i], pixel)
+        p = pixels[i//y, i%x]
+        pixels[i//y, i%x] = add_to_pixel(characters[i], pixels[i//y, i%x])
+        print(f"{p} -> {pixels[i//y, i%x]}")
 
     # Add metadata to the end
-    metadata_length = decimal_to_binary(pixels_required, 24)
+    metadata_length = decimal_to_binary(bs_length, 36)
     metadata_filetype = decimal_to_binary(filetype, 3)
     metadata_depth = decimal_to_binary(depth, 3)
     
@@ -155,8 +167,8 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
     
     metadata_sanity = decimal_to_binary(sanity_check, 3)
 
-    pixels[x-3, y-1] = add_to_pixel(metadata_length[0:12], pixels[x-3, y-1])
-    pixels[x-2, y-1] = add_to_pixel(metadata_length[12:], pixels[x-2, y-1])
+    pixels[x-3, y-1] = add_to_pixel(metadata_length[0:18], pixels[x-3, y-1])
+    pixels[x-2, y-1] = add_to_pixel(metadata_length[18:], pixels[x-2, y-1])
     pixels[x-1, y-1] = add_to_pixel(f"{metadata_sanity}{metadata_depth}{metadata_filetype}", pixels[x-1, y-1])
 
     return True
@@ -175,40 +187,40 @@ def extract_bitstring_from_png(filename):
         return False
 
     # Start extracting bitstream
-    bitstream = ""
-    for i in range(bs_length):
-        bitstream += get_from_pixel(pixels[i//y, i%x], depth)
+    bitstring = ""
+    for i in range(math.ceil(bs_length / (3 * depth))):
+        bitstring += get_from_pixel(pixels[i//y, i%x], depth)
 
-    print("RAW BITSTREAM")
-    print(bitstream)
+    print("RAW BITSTRING")
+    print(bitstring)
 
-    # Cut bitstream based on padding
-    overshoot = bs_length % 9
-    bitstream = bitstream[:-overshoot]
+    bitstring = bitstring[:bs_length]
 
-    bitstream_characters = [bitstream[i:i+9] for i in range(0, len(bitstream), 9)]
-    while "000000000" in bitstream_characters:
-        bitstream_characters.remove("000000000")
-    bitstream = "".join(bitstream_characters)
+    print("TRUNCATED BITSTRING")
+    print(bitstring)
 
     # Convert bitstream based on filetype
     if filetype == 0:
-        output = binary_to_string(bitstream)
+        print("Text file")
+        output = binary_to_string(bitstring)
     
 
     return output
 
 
-img = Image.open("rei.png")
-bs = text_to_binary("weed")
-insert_bitstring_into_png(bs, img, 2, 0)
-img.save("borgir.png")
-img.close()
+# img = Image.open("rei.png")
+# bs = text_to_binary("cock'nball")
+# insert_bitstring_into_png(bs, img, 2, 0)
+# img.save("borgir.png")
+# img.close()
 
+# print(get_from_pixel(read_pixel("borgir.png", 0), 2))
 
 # print(check_metadata("borgir.png"))
 print(extract_bitstring_from_png("borgir.png"))
 # print(check_metadata("borgir.png"))
+
+# print(binary_to_string("001100011001101111001100011001101011000100111001101110001100010001100001001101100001101100"))
 
 
 
