@@ -1,0 +1,15 @@
+24b -   Amount of pixels with hidden data
+3b  -   Sanity check / metadata check. Number of 1's in metadata (excluding itself)
+3b  -   Bit depth of data
+3b  -   File type. TXT, PNG, JPG, MP3, MP4, GIF
+
+36b -   Metadata total
+
+Data length is hidden with 4 bit depth accross 2 pixels
+Sanity check, data bit depth, file type all hidden with 3 bit depth in a single pixel
+
+
+decimal_to_binary(pixels_required)
++
+decimal_to_binary(depth)
++
