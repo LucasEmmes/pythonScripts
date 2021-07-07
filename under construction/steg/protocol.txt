@@ -1,4 +1,10 @@
+max-3, 4
+24b -   x and y dimensions of image (0 if txt). 2 pixels with 12b each, depth of 4
+
+max-2, 3
 36b -   Amount of bits with hidden data
+
+max
 3b  -   Sanity check / metadata check. Number of 1's in metadata (excluding itself)
 3b  -   Bit depth of data
 3b  -   File type. TXT, PNG, JPG, MP3, MP4, GIF

@@ -87,17 +87,42 @@ def check_metadata(filename):
             sanity += 1
 
     if decimal_to_binary(sanity, 3) == sdf[0:3]:
-        return binary_to_decimal(l1+l2), binary_to_decimal(sdf[3:6]), binary_to_decimal(sdf[6:])
+        return (binary_to_decimal(l1+l2), binary_to_decimal(sdf[3:6]), binary_to_decimal(sdf[6:]))
     return False
 
 def read_pixel(filename, n):
     image = Image.open(filename)
     x, y = image.size
+    print(f"Dimensions: {x}x-{y}y")
     pixels = image.load()
     image.close()
 
-    # print(pixels[n//y, n%x])
-    return pixels[n//y, n%x]
+    if n < 0:
+        print(f"Last pixel available: {x*y-1}")
+        n += x * y
+        print(f"Looking for pixel number: {n} at {n%x}, {n//x}")
+        
+    return pixels[n%x, n//x]
+
+# def con_test(n):
+#     x, y = 3, 3
+#     if n < 0:
+#         print("negative")
+#         n += x*y
+#         print(f"checking for {n}")
+        
+#     print(f"{n%x}, {n//y}")
+
+
+def get_hidden_dimensions(filename):
+    metadata = check_metadata(filename)
+    if metadata:
+        image = Image.open(filename)
+        x, y = image.size
+        image.close()
+
+        read_pixel
+    return False
 
 # STRING ENCODE AND DECODE
 def text_to_binary(text):
@@ -132,16 +157,16 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
     if num_of_pixels_available < pixels_required:
         raise ValueError(f"Length of data is too long! Max limit is {num_of_pixels_available * 3 * depth}, and your data is {len(bitstring)}!")
 
-    print("RAW BITSTRING BEFORE PADDING")
-    print(bitstring)
+    # print("RAW BITSTRING BEFORE PADDING")
+    # print(bitstring)
     bs_length = len(bitstring)
 
     # Pad bitstring
     desired_length = pixels_required * 3 * depth
     bitstring.ljust(desired_length, "0")
 
-    print("RAW BITSTRING AFTER PADDING")
-    print(bitstring)
+    # print("RAW BITSTRING AFTER PADDING")
+    # print(bitstring)
 
     # Cut bitstring into correctly sized pieces
     characters = []
@@ -191,21 +216,23 @@ def extract_bitstring_from_png(filename):
     for i in range(math.ceil(bs_length / (3 * depth))):
         bitstring += get_from_pixel(pixels[i//y, i%x], depth)
 
-    print("RAW BITSTRING")
-    print(bitstring)
+    # print("RAW BITSTRING")
+    # print(bitstring)
 
     bitstring = bitstring[:bs_length]
 
-    print("TRUNCATED BITSTRING")
-    print(bitstring)
+    # print("TRUNCATED BITSTRING")
+    # print(bitstring)
 
     # Convert bitstream based on filetype
     if filetype == 0:
-        print("Text file")
+        # print("Text file")
         output = binary_to_string(bitstring)
     
 
     return output
+
+
 
 
 # img = Image.open("rei.png")
@@ -217,8 +244,10 @@ def extract_bitstring_from_png(filename):
 # print(get_from_pixel(read_pixel("borgir.png", 0), 2))
 
 # print(check_metadata("borgir.png"))
-print(extract_bitstring_from_png("borgir.png"))
+# print(extract_bitstring_from_png("borgir.png"))
 # print(check_metadata("borgir.png"))
+
+print(read_pixel("test.png", -1))
 
 # print(binary_to_string("001100011001101111001100011001101011000100111001101110001100010001100001001101100001101100"))
 
