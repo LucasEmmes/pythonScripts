@@ -88,6 +88,8 @@ def check_metadata(filename):
 
     if decimal_to_binary(sanity, 3) == sdf[0:3]:
         return (binary_to_decimal(l1+l2), binary_to_decimal(sdf[3:6]), binary_to_decimal(sdf[6:]))
+    
+    print("No metadata found")
     return False
 
 def read_pixel(filename, n):
@@ -104,24 +106,16 @@ def read_pixel(filename, n):
         
     return pixels[n%x, n//x]
 
-# def con_test(n):
-#     x, y = 3, 3
-#     if n < 0:
-#         print("negative")
-#         n += x*y
-#         print(f"checking for {n}")
-        
-#     print(f"{n%x}, {n//y}")
-
-
 def get_hidden_dimensions(filename):
     metadata = check_metadata(filename)
     if metadata:
-        image = Image.open(filename)
-        x, y = image.size
-        image.close()
+        filetype = metadata[2]
+        if filetype == 1 or filetype == 2:
+            hx = get_from_pixel(read_pixel(filename, -4), 4)
+            hy = get_from_pixel(read_pixel(filename, -5), 4)
+            return (hx, hy)
 
-        read_pixel
+        print("No image is hidden")
     return False
 
 # STRING ENCODE AND DECODE
@@ -230,9 +224,20 @@ def extract_bitstring_from_png(filename):
         output = binary_to_string(bitstring)
     
 
-    return output
+    return (filetype, output)
 
 
+def text_into_image(text_filename, image_filename, depth, output_filename):
+    textfile = open(text_filename, "r")
+    text_to_hide = textfile.read()
+    textfile.close()
+    bitstring = text_to_binary(text_to_hide)
+
+    image = Image.open(image_filename)
+    insert_bitstring_into_png(bitstring, image, depth, 0)
+
+    image.save(f"{output_filename}.png")
+    return True
 
 
 # img = Image.open("rei.png")
@@ -241,16 +246,7 @@ def extract_bitstring_from_png(filename):
 # img.save("borgir.png")
 # img.close()
 
-# print(get_from_pixel(read_pixel("borgir.png", 0), 2))
-
-# print(check_metadata("borgir.png"))
 # print(extract_bitstring_from_png("borgir.png"))
-# print(check_metadata("borgir.png"))
-
-print(read_pixel("test.png", -1))
-
-# print(binary_to_string("001100011001101111001100011001101011000100111001101110001100010001100001001101100001101100"))
-
 
 
 

@@ -1,18 +1,24 @@
-max-3, 4
-24b -   x and y dimensions of image (0 if txt). 2 pixels with 12b each, depth of 4
-
-max-2, 3
-36b -   Amount of bits with hidden data
-
-max
+P-1 -   depth of 3
 3b  -   Sanity check / metadata check. Number of 1's in metadata (excluding itself)
 3b  -   Bit depth of data
 3b  -   File type. TXT, PNG, JPG, MP3, MP4, GIF
 
-36b -   Metadata total
+P-2
+18b -   Amount of bits with hidden data (first half of int) depth of 6
+P-3
+18b -   Amount of bits with hidden data (second half of int) depth of 6
 
-Data length is hidden with 6 bit depth accross 2 pixels
+P-4
+12b -   x dimension of image (0 if txt) depth of 4
+P-5
+12b -   y dimension of image (0 if txt) depth of 4
+
+
+69b -   Metadata total (nice)
+
 Sanity check, data bit depth, file type all hidden with 3 bit depth in a single pixel
+Data length is hidden with 6 bit depth accross 2 pixels
+If a photo is hidden, x and y coordinated
 
 
 decimal_to_binary(pixels_required)
