@@ -1,6 +1,6 @@
-from os import read
 from PIL import Image
 import math
+import sys
 
 
 # image = Image.open("rei.png")
@@ -100,9 +100,9 @@ def read_pixel(filename, n):
     image.close()
 
     if n < 0:
-        print(f"Last pixel available: {x*y-1}")
+        # print(f"Last pixel available: {x*y-1}")
         n += x * y
-        print(f"Looking for pixel number: {n} at {n%x}, {n//x}")
+        # print(f"Looking for pixel number: {n} at {n%x}, {n//x}")
         
     return pixels[n%x, n//x]
 
@@ -151,16 +151,11 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
     if num_of_pixels_available < pixels_required:
         raise ValueError(f"Length of data is too long! Max limit is {num_of_pixels_available * 3 * depth}, and your data is {len(bitstring)}!")
 
-    # print("RAW BITSTRING BEFORE PADDING")
-    # print(bitstring)
     bs_length = len(bitstring)
 
     # Pad bitstring
     desired_length = pixels_required * 3 * depth
     bitstring.ljust(desired_length, "0")
-
-    # print("RAW BITSTRING AFTER PADDING")
-    # print(bitstring)
 
     # Cut bitstring into correctly sized pieces
     characters = []
@@ -171,7 +166,6 @@ def insert_bitstring_into_png(bitstring, image, depth, filetype):
     for i in range(len(characters)):
         p = pixels[i//y, i%x]
         pixels[i//y, i%x] = add_to_pixel(characters[i], pixels[i//y, i%x])
-        print(f"{p} -> {pixels[i//y, i%x]}")
 
     # Add metadata to the end
     metadata_length = decimal_to_binary(bs_length, 36)
@@ -210,13 +204,7 @@ def extract_bitstring_from_png(filename):
     for i in range(math.ceil(bs_length / (3 * depth))):
         bitstring += get_from_pixel(pixels[i//y, i%x], depth)
 
-    # print("RAW BITSTRING")
-    # print(bitstring)
-
     bitstring = bitstring[:bs_length]
-
-    # print("TRUNCATED BITSTRING")
-    # print(bitstring)
 
     # Convert bitstream based on filetype
     if filetype == 0:
@@ -236,14 +224,66 @@ def text_into_image(text_filename, image_filename, depth, output_filename):
     image = Image.open(image_filename)
     insert_bitstring_into_png(bitstring, image, depth, 0)
 
-    image.save(f"{output_filename}.png")
+    extension = ".png"
+    if output_filename.lower().endswith(".png"):
+        extension = ""
+    image.save(f"{output_filename}{extension}")
     return True
 
 
-# img = Image.open("rei.png")
-# bs = text_to_binary("cock'nball")
+def main():
+
+    # EXTRACTION
+    if len(sys.argv) == 2:
+        filename = sys.argv[1]
+        
+        # Check if PNG
+        if filename.lower().endswith(".png"):
+
+            check = check_metadata(filename)
+            if check:
+                filetype, output = extract_bitstring_from_png(filename)
+
+                if filetype == 0:
+                    output_file = open("extracted_data.txt", "w", encoding="utf-8")
+                    output_file.write(output)
+                    output_file.close()
+
+                    print("Done")
+                
+                else:
+                    print("Could not parse filetype")
+            
+            else:
+                print("Could not find any data hidden in this image")
+
+        else:
+            print("Can only extract data from PNG images")
+
+
+    # INJECTION
+    elif len(sys.argv) == 5:
+        
+        hidden_file = sys.argv[1]
+        injection_file = sys.argv[2]
+        depth = int(sys.argv[3])
+        output_file = sys.argv[4]
+
+        # Hide txt file
+        if hidden_file.lower().endswith(".txt"):
+            print("txt file ok")
+            if injection_file.lower().endswith(".jpg") or injection_file.lower().endswith(".png"):
+                print("yes")
+                text_into_image(hidden_file, injection_file, depth, output_file)
+
+
+
+if __name__=="__main__":main()
+
+# img = Image.open("gunnar.jpg")
+# bs = text_to_binary("you little shits better show up to the fucking cunt ass 17:30 class today. else im gonna shit on your grades :)")
 # insert_bitstring_into_png(bs, img, 2, 0)
-# img.save("borgir.png")
+# img.save("gunnar_hidden.png")
 # img.close()
 
 # print(extract_bitstring_from_png("borgir.png"))
